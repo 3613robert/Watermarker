@@ -19,19 +19,12 @@ class Watermarker:
     def select_image(self):
         file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg;*.jpeg;*.png")])
         if file_path:
-            original_image = Image.open(file_path)
-
-            # Create a blank image with RGBA mode
-            watermark_image = Image.new("RGBA", original_image.size, (255, 255, 255, 0))
-
-            # Draw the watermark text on the blank image
-            draw = ImageDraw.Draw(watermark_image)
-            font = ImageFont.truetype("arial.ttf", 150)  # Adjust font size and type
-            watermark_text = "Watermark"
-            draw.text((10, 10), watermark_text, fill=(255, 255, 255, 128), font=font)
+            original_image = Image.open(file_path).convert('RGBA')
+            watermark = Image.open('watermark2.png').convert('RGBA')
+            watermark_resized = watermark.resize(original_image.size)
 
             # Blend the watermark image with the original image
-            watermarked_image = Image.alpha_composite(original_image.convert("RGBA"), watermark_image)
+            watermarked_image = Image.alpha_composite(original_image, watermark_resized)
 
             # Save or display the watermarked image
             watermarked_image.show()
